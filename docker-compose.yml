@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+
+  php-worker:
+    build: docker/development-php-cli
+    image: ${APP_IDENTIFIER}-development-php-cli
+    container_name: ${APP_IDENTIFIER}-development-php-cli
+    working_dir: /application
+    volumes:
+      - .:/application
+    environment:
+      - APP_TIMEZONE=America/Sao_Paulo
+      - GOOGLE_APPLICATION_CREDENTIALS=/application/storage/gcp-credentials.json
+      - GOOGLE_CLOUD_PROJECT=arquiveidev
+
+  database:
+    restart: always
+    container_name: ${APP_IDENTIFIER}-database
+    image: postgres:12-alpine
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./data/app:/var/lib/postgresql/data
+    environment:
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      TZ: America/Sao_Paulo
+
+  redis:
+    image: redis:alpine
+    container_name: ${APP_IDENTIFIER}-redis
+    ports:
+      - 6379:6379
+    volumes:
+      - /docker/redis.conf:/etc/redis/redis.conf
+    command: redis-server /etc/redis/redis.conf
+
+  cadivisor:
+    image: google/cadvisor:latest
+    container_name: ${APP_IDENTIFIER}-cadivisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - 9002:8080
