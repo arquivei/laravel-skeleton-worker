@@ -99,7 +99,7 @@ return [
         'custom' => [
             'driver' => 'single',
             'path' => 'php://stdout',
-            'tap' => [App\Adapters\Monolog\Formatter::class],
+            'tap' => [Core\Dependencies\Formatter::class],
             'level' => 'debug',
         ]
     ],

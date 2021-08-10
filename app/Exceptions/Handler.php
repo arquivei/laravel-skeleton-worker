@@ -1,19 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exceptions;
 
-use App\Adapters\Monolog\MonologLogAdapter;
 use App\Http\Middleware\HeadersMiddleware;
-use Illuminate\Http\Response;
-use Throwable;
+use Core\Dependencies\ContextualLogger;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    protected ContextualLogger $logger;
+
     /**
      * A list of the exception types that are not reported.
      *
@@ -34,22 +39,11 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Report or log an exception.
-     *
-     * @param Throwable $exception
-     * @throws \Exception
-     */
-    public function report(Throwable $exception)
-    {
-        parent::report($exception);
-    }
-
-    /**
      * Render an exception into an HTTP response.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param Throwable $exception
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
+     * @return Response
      * @throws Throwable
      */
     public function render($request, Throwable $exception)
@@ -70,7 +64,8 @@ class Handler extends ExceptionHandler
             return $this->getResponse(Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        (new MonologLogAdapter($request->headers->get(HeadersMiddleware::X_TRACEID)))->error(
+        $this->logger->setTraceId($request->headers->get(HeadersMiddleware::X_TRACE_ID));
+        $this->logger->error(
             Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR],
             ['exception' => $exception]
         );
@@ -78,17 +73,17 @@ class Handler extends ExceptionHandler
         return $this->getResponse(Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    private function getResponse(int $httResponseCode)
+    private function getResponse(int $httpResponseCode): Response
     {
         return response([
             'status' => [
                 'message' => sprintf(
                     '%s:%s',
                     env('APP_IDENTIFIER'),
-                    Response::$statusTexts[$httResponseCode]
+                    Response::$statusTexts[$httpResponseCode]
                 ),
-                'code' => $httResponseCode
+                'code' => $httpResponseCode
             ],
-        ], $httResponseCode);
+        ], $httpResponseCode);
     }
 }
