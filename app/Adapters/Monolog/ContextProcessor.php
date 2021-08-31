@@ -21,14 +21,6 @@ class ContextProcessor implements ProcessorInterface
             $record['context'][$key] = $value;
         }
 
-        if (isset($record['context']) && empty($record['context'])) {
-            unset($record['context']);
-        }
-
-        if (isset($record['extra']) && empty($record['extra'])) {
-            unset($record['extra']);
-        }
-
         return $record;
     }
 

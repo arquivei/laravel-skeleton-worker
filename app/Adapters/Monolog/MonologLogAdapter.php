@@ -19,13 +19,11 @@ class MonologLogAdapter implements ContextualLogger
     public function __construct(TraceIdGenerator $traceIdGenerator)
     {
         $this->contextProcessor = new ContextProcessor();
-        $this->contextProcessor->addContext([
-            'trace_id' => $traceIdGenerator->generate(),
-        ]);
+        $this->setTraceId($traceIdGenerator->generate());
 
         $levelDebug = env('APP_DEBUG', false);
         $handler = new StreamHandler("php://stdout", $levelDebug ? Logger::DEBUG : Logger::INFO);
-        $handler->setFormatter(new JsonFormatter());
+        $handler->setFormatter(new JsonFormatter(ignoreEmptyContextAndExtra: true));
         $this->logger = (new Logger('api_log'))
             ->pushHandler($handler)
             ->pushProcessor(new UidProcessor(32))
