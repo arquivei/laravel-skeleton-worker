@@ -30,4 +30,16 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'kafka' => [
+        'broker' => env('KAFKA_BROKERS'),
+        'security_protocol' => env('SECURITY_PROTOCOL'),
+        'sasl' => [
+            'mechanisms' => env('SASL_MECHANISMS'),
+            'username' => env('SASL_USERNAME'),
+            'password' => env('SASL_PASSWORD'),
+        ],
+        'events_stream' => env('EVENTS_STREAM', 'events'),
+        'prefix' => env('KAFKA_PREFIX', 'com.arquivei'),
+    ],
+
 ];

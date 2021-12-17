@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false">
+         defaultTestSuite="Unit"
+>
     <testsuites>
+        <testsuite name="Unit">
+            <directory>./tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Integration">
+            <directory>./tests/Integration</directory>
+        </testsuite>
         <testsuite name="All">
-            <directory suffix="Test.php">./tests</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./core</directory>
+    <coverage processUncoveredFiles="true">
+        <include>
             <directory suffix=".php">./app</directory>
-            <exclude>
-                <directory suffix=".php">./tests</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+            <directory suffix=".php">./core</directory>
+        </include>
+    </coverage>
     <php>
         <env name="APP_ENV" value="testing"/>
+
+        <server name="SASL_MECHANISMS" value="PLAIN" />
+        <server name="SECURITY_PROTOCOL" value="PLAINTEXT" />
+        <server name="KAFKA_BROKERS" value="localhost:9093" />
+        <server name="SASL_USERNAME" value="" />
+        <server name="SASL_PASSWORD" value="" />
+        <server name="EVENTS_STREAM" value="test-events" />
+        <server name="KAFKA_PREFIX" value="com.test" />
     </php>
 </phpunit>

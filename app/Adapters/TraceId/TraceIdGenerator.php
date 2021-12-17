@@ -10,6 +10,6 @@ class TraceIdGenerator
 {
     public function generate(): string
     {
-        return str_replace('-', '', Uuid::uuid4());
+        return str_replace('-', '', Uuid::uuid4()->toString());
     }
 }
