@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Adapters\Kafka;
+namespace App\Dependencies\Kafka;
 
 use App\Consumers\Middleware\Mapper\MessageMapper;
 use App\Consumers\Middleware\MessageDecoderMiddleware;
-use Core\Dependencies\LogInterface;
+use Arquivei\LogAdapter\Log;
 use Kafka\Consumer\Consumer;
 use Kafka\Consumer\ConsumerBuilder;
 use Kafka\Consumer\Entities\Config;
@@ -28,7 +28,7 @@ class KafkaConsumerBuilder
     private bool $autoCommit = false;
 
     public function __construct(
-        private LogInterface $logger,
+        private Log $logger,
         private KafkaConfig $kafkaConfig,
     ) {
     }

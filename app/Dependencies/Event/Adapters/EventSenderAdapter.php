@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Adapters\Event;
+namespace App\Dependencies\Event\Adapters;
 
+use App\Dependencies\Event\EventSenderConfig;
 use Arquivei\Events\Sender\Exceptions\EmptyExportersException;
 use Arquivei\Events\Sender\Exceptions\PusherException;
 use Arquivei\Events\Sender\Factories\LatestSchemaFactory;

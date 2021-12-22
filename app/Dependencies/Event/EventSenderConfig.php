@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Adapters\Event;
+namespace App\Dependencies\Event;
 
 use Arquivei\Events\Sender\Pusher;
 

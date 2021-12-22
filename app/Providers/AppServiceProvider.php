@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Adapters\Event\EventSenderAdapter;
-use App\Adapters\Event\EventSenderConfig;
-use App\Adapters\Kafka\KafkaConfig;
-use App\Adapters\Monolog\MonologLogAdapter;
+use App\Dependencies\Event\Adapters\EventSenderAdapter;
+use App\Dependencies\Event\EventSenderConfig;
+use App\Dependencies\Kafka\KafkaConfig;
 use Arquivei\Events\Sender\Exporters\Kafka;
 use Arquivei\Events\Sender\Pusher;
-use Core\Dependencies\ContextualLogger;
+use Arquivei\LogAdapter\Log;
+use Arquivei\LogAdapter\LogAdapter;
 use Core\Dependencies\Event\EventSenderInterface;
-use Core\Dependencies\LogInterface;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -27,9 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $logger = $this->app->make(MonologLogAdapter::class);
-        $this->app->singleton(LogInterface::class, fn() => $logger);
-        $this->app->singleton(ContextualLogger::class, fn() => $logger);
+        $this->app->singleton(Log::class, LogAdapter::class);
 
         $this->app->bind(KafkaConfig::class, function (): KafkaConfig {
             $config = config('services');
@@ -41,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
                 saslMechanism: $config['kafka']['sasl']['mechanisms'],
                 securityProtocol: $config['kafka']['security_protocol'],
                 eventsStream: $config['kafka']['events_stream'],
+                prefix: $config['kafka']['prefix'],
             );
         });
 
