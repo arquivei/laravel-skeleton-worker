@@ -6,7 +6,7 @@ namespace App\Consumers\Middleware;
 
 use App\Consumers\Middleware\Mapper\CannotMapMessageException;
 use App\Consumers\Middleware\Mapper\MessageMapper;
-use Core\Dependencies\LogInterface;
+use Arquivei\LogAdapter\Log;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use JsonException;
@@ -14,11 +14,11 @@ use stdClass;
 
 class MessageDecoderMiddleware
 {
-    private LogInterface $logger;
+    private Log $logger;
     private array $mappers;
 
     public function __construct(
-        LogInterface $logger,
+        Log $logger,
         MessageMapper ...$mappers
     ) {
         $this->logger = $logger;

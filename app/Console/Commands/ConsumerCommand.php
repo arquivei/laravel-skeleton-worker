@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Adapters\Kafka\KafkaConsumerBuilder;
+use App\Dependencies\Kafka\KafkaConsumerBuilder;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 

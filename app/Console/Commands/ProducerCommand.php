@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Adapters\Event\ExampleEvent;
+use App\Dependencies\Event\ExampleEvent;
 use Core\Dependencies\Event\Event;
 use Core\Dependencies\Event\EventSenderInterface;
 use Illuminate\Console\Command;

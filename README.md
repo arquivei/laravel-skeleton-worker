@@ -4,7 +4,7 @@ Base project for Command line Workers using Laravel
 
 ## Requirements
 
-+ PHP 8.0+
++ PHP 8.1+
 + Composer
 + Git
 + docker-composer 1.26+

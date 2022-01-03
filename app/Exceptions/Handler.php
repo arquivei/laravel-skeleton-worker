@@ -7,6 +7,7 @@ namespace App\Exceptions;
 use App\Http\Middleware\HeadersMiddleware;
 use Core\Dependencies\ContextualLogger;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Arquivei\LogAdapter\Log;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +18,6 @@ use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    protected ContextualLogger $logger;
 
     /**
      * A list of the exception types that are not reported.
@@ -64,11 +64,17 @@ class Handler extends ExceptionHandler
             return $this->getResponse(Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $this->logger->setTraceId($request->headers->get(HeadersMiddleware::X_TRACE_ID));
-        $this->logger->error(
-            Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR],
-            ['exception' => $exception]
+
+        /** @var Log $logger */
+
+        // $logger = new LogAdapter();
+        $logger = app(Log::class);
+        $logger->setTraceId($request->headers->get(HeadersMiddleware::X_TRACEID));
+        $logger->error(
+            Response::$statusTexts[HttpResponse::HTTP_INTERNAL_SERVER_ERROR],
+            ['exception' => $e]
         );
+
 
         return $this->getResponse(Response::HTTP_INTERNAL_SERVER_ERROR);
     }

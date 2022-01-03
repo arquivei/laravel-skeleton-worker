@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Adapters\Kafka;
+namespace App\Dependencies\Kafka;
 
 class KafkaConfig
 {
@@ -13,8 +13,7 @@ class KafkaConfig
         private string $saslMechanism,
         private string $securityProtocol,
         private string $eventsStream,
-    ) {
-    }
+    ) {}
 
     public function getBrokers(): string
     {

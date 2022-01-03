@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Adapters\Event;
+namespace App\Dependencies\Event;
 
 use Core\Dependencies\Event\Event;
 
