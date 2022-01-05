@@ -38,7 +38,6 @@ class AppServiceProvider extends ServiceProvider
                 saslMechanism: $config['kafka']['sasl']['mechanisms'],
                 securityProtocol: $config['kafka']['security_protocol'],
                 eventsStream: $config['kafka']['events_stream'],
-                prefix: $config['kafka']['prefix'],
             );
         });
 
